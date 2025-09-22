@@ -20,8 +20,12 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 
 // A sample route
-app.get('/test', (req, res) => {
-  res.send('Hello from your Node.js and Express backend!');
+app.get('/api/test', (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "Society App Backend is running",
+    timestamp: new Date().toISOString(),
+  })
 });
 
 // Start the server
