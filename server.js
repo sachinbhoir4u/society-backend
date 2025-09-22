@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require("mongoose");
-
+require("dotenv").config();
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.get('/test', (req, res) => {
 });
 
 // Start the server
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

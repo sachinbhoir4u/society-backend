@@ -126,6 +126,7 @@ router.post("/login", validateUserLogin, async (req, res) => {
         token: generateToken(user._id),
       },
     })
+    console.log(`User ${user.email} logged in successfully.`)
   } catch (error) {
     console.error("Login error:", error)
     res.status(500).json({
