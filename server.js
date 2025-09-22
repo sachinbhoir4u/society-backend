@@ -4,9 +4,8 @@ const mongoose = require("mongoose");
 
 const app = express();
 
-
 //routes 
-// const authRoutes = require("./routes/auth");
+const authRoutes = require("./routes/auth");
 
 // Database connection
 mongoose
@@ -18,7 +17,7 @@ mongoose
 app.use(express.json());
 
 // Routes
-// app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 
 // A sample route
 app.get('/test', (req, res) => {
