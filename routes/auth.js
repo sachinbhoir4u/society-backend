@@ -137,6 +137,71 @@ router.post("/login", validateUserLogin, async (req, res) => {
   }
 })
 
+// @route   GET /api/auth/verify
+// @access  Public
+router.get("/verify", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "No token provided",
+      });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select(
+      "id name email phone flatNumber wing floor role isEmailVerified profileImage lastLogin emergencyContact vehicleDetails"
+    );
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Check if user is active
+    if (!user.isActive) {
+      return res.status(401).json({
+        success: false,
+        message: "Account is deactivated. Please contact admin.",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Token verified successfully",
+      data: {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          flatNumber: user.flatNumber,
+          wing: user.wing,
+          floor: user.floor,
+          role: user.role,
+          isEmailVerified: user.isEmailVerified,
+          profileImage: user.profileImage,
+          lastLogin: user.lastLogin,
+          emergencyContact: user.emergencyContact,
+          vehicleDetails: user.vehicleDetails,
+        },
+        token,
+      },
+    });
+  } catch (error) {
+    console.error("Token verification error:", error);
+    res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+      error: error.message,
+    });
+  }
+});
+
 // @route   POST /api/auth/logout
 // @access  Private
 router.post("/logout", protect, async (req, res) => {
@@ -159,6 +224,6 @@ router.post("/logout", protect, async (req, res) => {
       error: error.message,
     })
   }
-})
+});
 
 module.exports = router
