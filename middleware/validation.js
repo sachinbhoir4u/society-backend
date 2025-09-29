@@ -31,8 +31,21 @@ const validateUserLogin = [
   handleValidationErrors,
 ]
 
+const validatePayment = [
+  body("amount").isFloat({ min: 1 }).withMessage("Amount must be greater than 0"),
+  body("type").isIn(["maintenance", "water", "electricity", "amenity", "penalty"]).withMessage("Invalid payment type"),
+  body("description")
+    .optional()
+    .trim()
+    .isLength({ max: 200 })
+    .withMessage("Description must be maximum 200 characters"),
+  handleValidationErrors,
+]
+
+
 module.exports = {
   validateUserRegistration,
   validateUserLogin,
+  validatePayment,
   handleValidationErrors,
 }
